@@ -1,0 +1,9 @@
+/composer.lock
+/composer.phar
+/vendor/*
+/build/
+GPATH
+GRTAGS
+GTAGS
+.php-version
+.DS_Store
