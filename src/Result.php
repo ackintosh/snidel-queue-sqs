@@ -23,18 +23,27 @@ class Result implements QueueInterface
      */
     public function __construct(Config $config)
     {
-        $this->sqsClient = SqsClient::factory(array(
-            'key'       => $config->get('aws-key'),
-            'secret'    => $config->get('aws-secret'),
-            'region'    => $config->get('aws-region'),
-        ));
+        $this->config = $config;
+        $this->sqsClient = $this->createSqsClient();
 
         $queueName = sprintf('result_%s_%d', gethostname(), $config->get('ownerPid'));
+        // can only include alphanumeric characters, hyphens, or underscores
+        $queueName = preg_replace('/[^a-zA-Z0-9_-]*/', '', $queueName);
 
         $result = $this->sqsClient->createQueue(
             array('QueueName' => $queueName)
         );
+
         $this->queueUrl = $result->get('QueueUrl');
+    }
+
+    private function createSqsClient()
+    {
+        return SqsClient::factory(array(
+            'key'       => $this->config->get('aws-key'),
+            'secret'    => $this->config->get('aws-secret'),
+            'region'    => $this->config->get('aws-region'),
+        ));
     }
 
     /**
@@ -42,9 +51,9 @@ class Result implements QueueInterface
      */
     public function enqueue(SnidelResult $result)
     {
-        $serialized = Formatter::serialize($task);
+        $serialized = Formatter::serialize($result);
 
-        $r = $this->sqsClient->sendMessage(
+        $this->sqsClient->sendMessage(
             array(
                 'QueueUrl'      => $this->queueUrl,
                 'MessageBody'   => base64_encode($serialized),
@@ -73,7 +82,7 @@ class Result implements QueueInterface
 
         $serialized = base64_decode($r['Messages'][0]['Body']);
 
-        $r = $this->sqsClient->deleteMessage(
+        $this->sqsClient->deleteMessage(
             array(
                 'QueueUrl'      => $this->queueUrl,
                 'ReceiptHandle' => $r['Messages'][0]['ReceiptHandle'],
