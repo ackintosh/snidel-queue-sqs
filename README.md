@@ -4,7 +4,7 @@
 
 #### composer.json
 
-```
+```json
 {
     "require": {
     	"ackintosh/snidel": "*",
