@@ -2,8 +2,7 @@
     "name": "ackintosh/snidel-queue-sqs",
     "type": "library",
     "require": {
-      "aws/aws-sdk-php": "2.8.31",
-      "ramsey/uuid": "2.8.2"
+      "aws/aws-sdk-php": "2.8.31"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.5"
