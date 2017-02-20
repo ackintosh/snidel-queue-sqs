@@ -1,5 +1,7 @@
 # Snidel Amazon SQS plugin
 
+![image](images/snidel-queue-sqs.png)
+
 ## Install
 
 #### composer.json
