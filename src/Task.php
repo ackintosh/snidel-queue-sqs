@@ -42,9 +42,9 @@ class Task implements QueueInterface
     private function createSqsClient()
     {
         return SqsClient::factory(array(
-            'key'       => $this->config->get('aws-key'),
-            'secret'    => $this->config->get('aws-secret'),
-            'region'    => $this->config->get('aws-region'),
+            'key'    => $this->config->get('aws-key'),
+            'secret' => $this->config->get('aws-secret'),
+            'region' => $this->config->get('aws-region'),
         ));
     }
 
@@ -57,8 +57,8 @@ class Task implements QueueInterface
 
         $r = $this->sqsClient->sendMessage(
             array(
-                'QueueUrl'      => $this->queueUrl,
-                'MessageBody'   => base64_encode($serialized),
+                'QueueUrl'    => $this->queueUrl,
+                'MessageBody' => base64_encode($serialized),
             )
         );
         $this->queuedCount++;
@@ -72,9 +72,9 @@ class Task implements QueueInterface
         while (true) {
             $r = $this->sqsClient->receiveMessage(
                 array(
-                    'QueueUrl'              => $this->queueUrl,
-                    'MaxNumberOfMessages'   => 1,
-                    'WaitTimeSeconds'       => 20,
+                    'QueueUrl'            => $this->queueUrl,
+                    'MaxNumberOfMessages' => 1,
+                    'WaitTimeSeconds'     => 20,
                 )
             );
 
